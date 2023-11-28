@@ -45,4 +45,11 @@ public class Types {
 			throw new UnsupportedOperationException( "Failed to get raw type of: " + generic );
 		}
 	}
+	
+	public static ParameterizedType createGenericType( Type rawType, Type... actualTypeArguments ) {
+		return new SimpleParameterizedType( rawType, null, actualTypeArguments );
+	}
+	public static ParameterizedType createGenericSubType( Type rawType, Type ownerType, Type... actualTypeArguments ) {
+		return new SimpleParameterizedType( rawType, ownerType, actualTypeArguments );
+	}
 }
