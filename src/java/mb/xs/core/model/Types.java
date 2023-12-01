@@ -5,6 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.*;
 
 public class Types {
 	public static final Model<Object> OBJECT_MODEL = new ModelType<>( Object.class );
@@ -44,5 +45,33 @@ public class Types {
 		} else {
 			throw new UnsupportedOperationException( "Failed to get raw type of: " + generic );
 		}
+	}
+
+	public static ParameterizedType createGenericType( Type rawType, Type... actualTypeArguments ) {
+		return new SimpleParameterizedType( rawType, null, actualTypeArguments );
+	}
+	public static ParameterizedType createGenericSubType( Type rawType, Type ownerType, Type... actualTypeArguments ) {
+		return new SimpleParameterizedType( rawType, ownerType, actualTypeArguments );
+	}
+
+	@SuppressWarnings( "unchecked" )
+	public static <T> Model<Collection<T>> createModelCollection( Model<T> type ) {
+		return (Model<Collection<T>>) (Model<?>) new ModelType<>(
+				createGenericType( Collection.class, type.getGeneric() ), Collection.class );
+	}
+	@SuppressWarnings( "unchecked" )
+	public static <T> Model<List<T>> createModelList( Model<T> type ) {
+		return (Model<List<T>>) (Model<?>) new ModelType<>( createGenericType( List.class, type.getGeneric() ),
+				List.class );
+	}
+	@SuppressWarnings( "unchecked" )
+	public static <T> Model<Set<T>> createModelSet( Model<T> type ) {
+		return (Model<Set<T>>) (Model<?>) new ModelType<>( createGenericType( Set.class, type.getGeneric() ),
+				Set.class );
+	}
+	@SuppressWarnings( "unchecked" )
+	public static <K, V> Model<Map<K, V>> createModelMap( Model<K> keyType, Model<V> valueType ) {
+		return (Model<Map<K, V>>) (Model<?>) new ModelType<>(
+				createGenericType( Map.class, keyType.getGeneric(), valueType.getGeneric() ), Map.class );
 	}
 }
