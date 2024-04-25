@@ -74,4 +74,5 @@ public class Types {
 		return (Model<Map<K, V>>) (Model<?>) new ModelType<>(
 				createGenericType( Map.class, keyType.getGeneric(), valueType.getGeneric() ), Map.class );
 	}
+
 }
